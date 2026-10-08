@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WEBAR SUHU DAN KALOR - Media Pembelajaran Fisika SMA</title>
+  
+  <!-- Tailwind CSS & FontAwesome -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Three.js Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- Chart.js Library -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    .bg-gradient-header { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); }
+    .accent-purple { color: #8e44ad; }
+    .bg-accent-purple { background-color: #8e44ad; }
+    .card-hover:hover { transform: translateY(-3px); transition: all 0.2s ease-in-out; }
+    /* Dual Panel Grid setup */
+    @media (min-width: 1024px) {
+      .dual-panel {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        height: calc(100vh - 120px);
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+  <!-- HEADER & NAVIGATION -->
+  <header class="bg-gradient-header text-white shadow-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
+      <div>
+        <h1 class="text-xl font-bold tracking-wide flex items-center gap-2">
+          <i class="fa-solid fa-temperature-full text-orange-400"></i> WEBAR SUHU DAN KALOR
+        </h1>
+        <p class="text-xs text-slate-200">SMA Muhammadiyah 4 | Guru: Khairunnisa Nurfadilah, S.Pd. | Kelas X (Fase E)</p>
+      </div>
+
+      <!-- Main Navigation -->
+      <nav class="flex flex-wrap gap-2 mt-2 md:mt-0 text-sm">
+        <button onclick="showMeeting(1)" id="nav-p1" class="px-3 py-1.5 rounded-lg bg-white/20 hover:bg-white/30 font-semibold transition">
+          🌡️ P1: Suhu
+        </button>
+        <button onclick="showMeeting(2)" id="nav-p2" class="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/30 font-semibold transition">
+          🔥 P2: Kalor
+        </button>
+        <button onclick="showMeeting(3)" id="nav-p3" class="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/30 font-semibold transition">
+          ♨️ P3: Perpindahan Kalor
+        </button>
+        <button onclick="showSection('evaluasi')" id="nav-eval" class="px-3 py-1.5 rounded-lg bg-purple-700 hover:bg-purple-800 font-semibold transition">
+          📝 Evaluasi
+        </button>
+        <button onclick="showSection('refleksi')" id="nav-refl" class="px-3 py-1.5 rounded-lg bg-teal-600 hover:bg-teal-700 font-semibold transition">
+          💭 Refleksi
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- SUB NAVIGATION FOR LESSON CONTENT -->
+  <div class="bg-slate-200 border-b border-slate-300 py-2 px-4 sticky top-[60px] z-40">
+    <div class="max-w-7xl mx-auto flex gap-4 text-xs md:text-sm font-medium overflow-x-auto">
+      <button onclick="scrollToTab('modul')" class="text-slate-700 hover:text-blue-700 flex items-center gap-1">📖 Modul Materi</button>
+      <span>|</span>
+      <button onclick="scrollToTab('pbl')" class="text-slate-700 hover:text-blue-700 flex items-center gap-1">🎯 Masalah Contextual (PBL)</button>
+      <span>|</span>
+      <button onclick="scrollToTab('lkpd-webar')" class="text-slate-700 hover:text-blue-700 flex items-center gap-1">📋 LKPD & 🔬 WebAR</button>
+    </div>
+  </div>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-grow max-w-7xl w-full mx-auto p-4">
+
+    <!-- ================================================================= -->
+    <!-- PERTEMUAN 1: SUHU DAN ALAT UKUR SUHU                             -->
+    <!-- ================================================================= -->
+    <section id="pertemuan1" class="meeting-section space-y-6">
+      
+      <!-- Modul Pembelajaran -->
+      <div id="p1-modul" class="bg-white p-5 rounded-xl shadow-md border border-slate-200">
+        <h2 class="text-lg font-bold text-blue-900 border-b pb-2 mb-3 flex items-center gap-2">
+          📖 Modul Ringkas: Bab 6.A - Suhu & Skala Suhu
+        </h2>
+        <div class="grid md:grid-cols-2 gap-4 text-sm text-slate-700">
+          <div>
+            <h3 class="font-bold text-slate-900 mb-1">1. Pengertian Suhu dan Alat Ukurnya</h3>
+            <p>Suhu adalah ukuran derajat panas atau dinginnya suatu benda. Suhu menggambarkan tingkat energi kinetik rata-rata partikel dalam benda tersebut. Alat ukur suhu yang baku adalah <strong>Termometer</strong> yang bekerja berdasarkan sifat termometrik zat.</p>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-900 mb-1">2. Skala Suhu</h3>
+            <p>Empat skala suhu utama meliputi Celsius (°C), Fahrenheit (°F), Kelvin (K), dan Reamur (°R). Hubungan konversinya didasarkan pada titik beku dan titik didih air pada tekanan 1 atm.</p>
+            <p class="mt-1 font-mono text-xs bg-slate-100 p-2 rounded">
+              Perbandingan skala C : R : (F - 32) : (K - 273) = 5 : 4 : 9 : 5
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Orientasi Masalah PBL -->
+      <div id="p1-pbl" class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl shadow-sm">
+        <span class="text-xs font-bold uppercase tracking-wider text-amber-700">Tahap 1 PBL: Orientasi Masalah</span>
+        <h3 class="text-md font-bold text-slate-900 mt-1">Fenomena Indra Peraba vs Pengukuran Objektif</h3>
+        <p class="text-sm text-slate-700 mt-1">
+          "Ketika seseorang mengatakan bahwa air dalam gelas terasa panas, sedangkan orang lain mengatakan air tersebut hanya hangat, apakah perasaan/indra peraba manusia dapat digunakan untuk menentukan suhu secara tepat dan objektif?"
+        </p>
+        <p class="text-xs font-semibold text-amber-800 mt-2">
+          ❓ Pertanyaan Pemantik: Bagaimana cara menentukan suhu suatu benda secara akurat dan objektif?
+        </p>
+      </div>
+
+      <!-- LKPD & WebAR Dual Panel -->
+      <div id="p1-lkpd-webar" class="dual-panel">
+        
+        <!-- PANEL KIRI: LKPD INTERAKTIF -->
+        <div class="bg-white p-5 rounded-xl shadow-md border border-slate-200 overflow-y-auto max-h-[650px]">
+          <div class="border-b pb-3 mb-4">
+            <span class="text-xs bg-blue-100 text-blue-800 font-bold px-2.5 py-1 rounded">LKPD INTERAKTIF - P1</span>
+            <h3 class="text-lg font-bold text-slate-900 mt-1">Pengukuran Suhu & Konversi Skala</h3>
+          </div>
+
+          <!-- Deep Learning Phase -->
+          <div class="mb-4 bg-purple-50 p-3 rounded-lg text-xs text-purple-900 border border-purple-200">
+            <strong>Tahap Deep Learning:</strong>
+            <span class="bg-purple-200 px-1 rounded">Memahami</span> Identifikasi konsep suhu → 
+            <span class="bg-purple-200 px-1 rounded">Mengaplikasi</span> Eksperimen WebAR & Konversi → 
+            <span class="bg-purple-200 px-1 rounded">Merefleksi</span> Analisis pentingnya alat ukur objektif.
+          </div>
+
+          <form id="form-lkpd-1" class="space-y-4 text-sm">
+            <div>
+              <h4 class="font-bold text-slate-800 mb-1">A. Tujuan Pembelajaran</h4>
+              <ul class="list-disc list-inside text-xs text-slate-600 space-y-1">
+                <li>Menjelaskan pengertian suhu dan alat ukurnya.</li>
+                <li>Membedakan skala Celsius, Fahrenheit, Kelvin, dan Reamur.</li>
+                <li>Melakukan konversi suhu antar-skala secara akurat.</li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 class="font-bold text-slate-800 mb-1">B. Tabel Pengamatan Virtual</h4>
+              <div class="overflow-x-auto">
+                <table class="w-full text-xs text-left border-collapse border border-slate-300">
+                  <thead class="bg-slate-100">
+                    <tr>
+                      <th class="border p-2">Wadah Benda</th>
+                      <th class="border p-2">°C</th>
+                      <th class="border p-2">°F</th>
+                      <th class="border p-2">K</th>
+                      <th class="border p-2">°R</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="border p-1.5 font-medium">Air Es</td>
+                      <td class="border p-1"><input type="number" class="w-full p-1 border rounded" value="0" readonly></td>
+                      <td class="border p-1"><input type="number" id="p1-es-f" class="w-full p-1 border rounded" placeholder="32"></td>
+                      <td class="border p-1"><input type="number" id="p1-es-k" class="w-full p-1 border rounded" placeholder="273"></td>
+                      <td class="border p-1"><input type="number" id="p1-es-r" class="w-full p-1 border rounded" placeholder="0"></td>
+                    </tr>
+                    <tr>
+                      <td class="border p-1.5 font-medium">Air Hangat</td>
+                      <td class="border p-1"><input type="number" class="w-full p-1 border rounded" value="50" readonly></td>
+                      <td class="border p-1"><input type="number" id="p1-h-f" class="w-full p-1 border rounded" placeholder="122"></td>
+                      <td class="border p-1"><input type="number" id="p1-h-k" class="w-full p-1 border rounded" placeholder="323"></td>
+                      <td class="border p-1"><input type="number" id="p1-h-r" class="w-full p-1 border rounded" placeholder="40"></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div>
+              <h4 class="font-bold text-slate-800 mb-1">C. Pertanyaan Analisis</h4>
+              <div class="space-y-2 text-xs">
+                <div>
+                  <label class="block font-medium mb-1">1. Mengapa indra peraba tidak dapat mengukur suhu secara akurat?</label>
+                  <textarea class="w-full p-2 border rounded" rows="2" placeholder="Jawaban siswa..."></textarea>
+                </div>
+                <div>
+                  <label class="block font-medium mb-1">2. Bagaimana hubungan matematis konversi dari Celsius ke Fahrenheit?</label>
+                  <textarea class="w-full p-2 border rounded" rows="2" placeholder="Jawaban siswa..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h4 class="font-bold text-slate-800 mb-1">D. Kesimpulan</h4>
+              <textarea class="w-full p-2 text-xs border rounded" rows="2" placeholder="Tuliskan kesimpulan pengamatan Anda..."></textarea>
+            </div>
+          </form>
+        </div>
+
+        <!-- PANEL KANAN: WEBAR VIRTUAL THERMOMETER -->
+        <div class="bg-slate-900 rounded-xl p-4 flex flex-col justify-between text-white relative min-h-[450px]">
+          
+          <!-- AR Overlay Controls -->
+          <div class="flex justify-between items-center z-10 bg-slate-800/80 p-2 rounded-lg backdrop-blur">
+            <span class="text-xs font-bold text-cyan-400"><i class="fa-solid fa-cube"></i> VIRTUAL THERMOMETER (3D)</span>
+            <button id="ar-toggle-1" onclick="toggleAR(1)" class="text-xs bg-cyan-600 hover:bg-cyan-500 text-white px-3 py-1 rounded font-semibold transition">
+              <i class="fa-solid fa-camera"></i> Mode AR Kamera
+            </button>
+          </div>
+
+          <!-- 3D Canvas Area -->
+          <div id="canvas-container-1" class="w-full h-64 md:h-80 my-auto rounded-lg overflow-hidden relative">
+            <video id="webcam-1" class="absolute inset-0 w-full h-full object-cover hidden" autoplay playsinline></video>
+          </div>
+
+          <!-- Controls HUD -->
+          <div class="bg-slate-800/90 p-3 rounded-lg z-10 space-y-3">
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <div>
+                <label class="block text-slate-300">Pilih Wadah Sample:</label>
+                <select id="p1-sample" onchange="updateP1Sample()" class="w-full bg-slate-700 text-white rounded p-1">
+                  <option value="0">Air Es (0 °C)</option>
+                  <option value="25">Air Suhu Ruang (25 °C)</option>
+                  <option value="50" selected>Air Hangat (50 °C)</option>
+                  <option value="100">Air Panas (100 °C)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-slate-300">Skala Tampilan 3D:</label>
+                <select id="p1-skala" onchange="updateP1Display()" class="w-full bg-slate-700 text-white rounded p-1">
+                  <option value="C">Celsius (°C)</option>
+                  <option value="F">Fahrenheit (°F)</option>
+                  <option value="K">Kelvin (K)</option>
+                  <option value="R">Reamur (°R)</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <span>Atur Suhu Manual:</span>
+                <span id="p1-temp-val" class="text-cyan-400 font-bold">50 °C</span>
+              </div>
+              <input type="range" id="p1-slider" min="-10" max="110" value="50" oninput="updateP1Slider(this.value)" class="w-full accent-cyan-400">
+            </div>
+
+            <div class="grid grid-cols-4 gap-1 text-center font-mono text-xs bg-slate-950 p-2 rounded border border-slate-700">
+              <div><span class="text-slate-400 block text-[10px]">CELSIUS</span><span id="disp-c">50 °C</span></div>
+              <div><span class="text-slate-400 block text-[10px]">FAHRENHEIT</span><span id="disp-f" class="text-orange-400">122 °F</span></div>
+              <div><span class="text-slate-400 block text-[10px]">KELVIN</span><span id="disp-k" class="text-emerald-400">323 K</span></div>
+              <div><span class="text-slate-400 block text-[10px]">REAMUR</span><span id="disp-r" class="text-purple-400">40 °R</span></div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- PERTEMUAN 2: KALOR DAN PERUBAHANNYA                              -->
+    <!-- ================================================================= -->
+    <section id="pertemuan2" class="meeting-section space-y-6 hidden">
+      
+      <!-- Modul Pembelajaran -->
+      <div id="p2-modul" class="bg-white p-5 rounded-xl shadow-md border border-slate-200">
+        <h2 class="text-lg font-bold text-orange-900 border-b pb-2 mb-3 flex items-center gap-2">
+          📖 Modul Ringkas: Bab 6.B - Kalor & Pengaruhnya
+        </h2>
+        <div class="grid md:grid-cols-3 gap-4 text-xs text-slate-700">
+          <div>
+            <h3 class="font-bold text-slate-900 mb-1">1. Perubahan Suhu</h3>
+            <p>Kalor ($Q$) adalah energi panas yang berpindah. Kalor yang diterima/dilepas mengubah suhu zat:</p>
+            <p class="font-mono bg-slate-100 p-1 rounded mt-1 text-center font-bold">Q = m · c · ΔT</p>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-900 mb-1">2. Perubahan Wujud</h3>
+            <p>Saat terjadi perubahan wujud (melebur/mendidih), suhu zat bernilai konstan. Energi yang diserap digunakan untuk melepas ikatan molekul:</p>
+            <p class="font-mono bg-slate-100 p-1 rounded mt-1 text-center font-bold">Q = m · L</p>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-900 mb-1">3. Pemuaian Benda</h3>
+            <p>Pemanasan meningkatkan getaran partikel sehingga jarak antar-partikel membesar, memicu pemuaian panjang, luas, atau volume.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Orientasi Masalah PBL -->
+      <div id="p2-pbl" class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl shadow-sm">
+        <span class="text-xs font-bold uppercase tracking-wider text-amber-700">Tahap 1 PBL: Orientasi Masalah</span>
+        <h3 class="text-md font-bold text-slate-900 mt-1">Pengaruh Energi Panas Terhadap Zat</h3>
+        <p class="text-sm text-slate-700 mt-1">
+          "Mengapa ketika air dipanaskan suhunya meningkat? Mengapa es yang terus diberi kalor dapat mencair dan mendidih menjadi uap? Serta mengapa beberapa jenis benda seperti logam memuai saat dipanaskan?"
+        </p>
+        <p class="text-xs font-semibold text-amber-800 mt-2">
+          ❓ Pertanyaan Pemantik: Ke manakah energi kalor mengalir dan bagaimana efek mikroskopisnya pada partikel benda?
+        </p>
+      </div>
+
+      <!-- LKPD & WebAR Dual Panel -->
+      <div id="p2-lkpd-webar" class="dual-panel">
+        
+        <!-- PANEL KIRI: LKPD INTERAKTIF -->
+        <div class="bg-white p-5 rounded-xl shadow-md border border-slate-200 overflow-y-auto max-h-[700px]">
+          <div class="border-b pb-3 mb-4">
+            <span class="text-xs bg-orange-100 text-orange-800 font-bold px-2.5 py-1 rounded">LKPD INTERAKTIF - P2</span>
+            <h3 class="text-lg font-bold text-slate-900 mt-1">Eksperimen Kalor, Wujud, dan Pemuaian</h3>
+          </div>
+
+          <form id="form-lkpd-2" class="space-y-4 text-sm">
+            <div>
+              <h4 class="font-bold text-slate-800 mb-1">A. Hipotesis Percobaan</h4>
+              <p class="text-xs text-slate-600 mb-1">Apakah dua benda berbeda jenis dengan massa sama akan mengalami kenaikan suhu yang sama jika diberi kalor sama?</p>
+              <textarea class="w-full p-2 text-xs border rounded" rows="2" placeholder="Tulis hipotesis Anda..."></textarea>
+            </div>
+
+            <div>
+              <h4 class="font-bold text-slate-800 mb-1">B. Tabel Data Hasil Simulasi</h4>
+              <div class="overflow-x-auto">
+                <table class="w-full text-xs text-left border-collapse border border-slate-300">
+                  <thead class="bg-slate-100">
+                    <tr>
+                      <th class="border p-1.5">Bahan</th>
+                      <th class="border p-1.5">Massa (g)</th>
+                      <th class="border p-1.5">Q (Joule)</th>
+                      <th class="border p-1.5">T₀ (°C)</th>
+                      <th class="border p-1.5">T_akhir (°C)</th>
+                      <th class="border p-1.5">ΔT (°C)</th>
+                    </tr>
+                  </thead>
+                  <tbody id="p2-table-body">
+                    <tr>
+                      <td class="border p-1">Air</td>
+                      <td class="border p-1" id="tb-m">500</td>
+                      <td class="border p-1" id="tb-q">10000</td>
+                      <td class="border p-1" id="tb-t0">25</td>
+                      <td class="border p-1" id="tb-ta">29.8</td>
+                      <td class="border p-1 font-bold text-blue-600" id="tb-dt">4.8</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div>
+              <h4 class="font-bold text-slate-800 mb-1">C. Pertanyaan Analisis</h4>
+              <div class="space-y-2 text-xs">
+                <div>
+                  <label class="block font-medium mb-1">1. Mengapa bahan dengan kalor jenis ($c$) lebih kecil mengalami ΔT lebih tinggi?</label>
+                  <textarea class="w-full p-2 border rounded" rows="2" placeholder="Jawaban siswa..."></textarea>
+                </div>
+                <div>
+                  <label class="block font-medium mb-1">2. Jelaskan perbedaan perubahan suhu dan perubahan wujud zat berdasarkan gerak partikel!</label>
+                  <textarea class="w-full p-2 border rounded" rows="2" placeholder="Jawaban siswa..."></textarea>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- PANEL KANAN: WEBAR EKSPERIMEN KALOR -->
+        <div class="bg-slate-900 rounded-xl p-4 flex flex-col justify-between text-white relative min-h-[500px]">
+          
+          <div class="flex justify-between items-center z-10 bg-slate-800/80 p-2 rounded-lg backdrop-blur">
+            <span class="text-xs font-bold text-orange-400"><i class="fa-solid fa-fire"></i> SIMULASI EKSPERIMEN KALOR (3D)</span>
+            <button id="ar-toggle-2" onclick="toggleAR(2)" class="text-xs bg-orange-600 hover:bg-orange-500 text-white px-3 py-1 rounded font-semibold">
+              <i class="fa-solid fa-camera"></i> Mode AR Kamera
+            </button>
+          </div>
+
+          <!-- 3D Canvas -->
+          <div id="canvas-container-2" class="w-full h-56 md:h-64 my-auto rounded-lg overflow-hidden relative">
+            <video id="webcam-2" class="absolute inset-0 w-full h-full object-cover hidden" autoplay playsinline></video>
+          </div>
+
+          <!-- Controls & Realtime Calc -->
+          <div class="bg-slate-800/90 p-3 rounded-lg z-10 space-y-2 text-xs">
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-slate-300">Pilih Bahan:</label>
+                <select id="p2-mat" onchange="runP2Calc()" class="w-full bg-slate-700 text-white rounded p-1">
+                  <option value="4184">Air (c = 4184 J/kg°C)</option>
+                  <option value="900">Aluminium (c = 900 J/kg°C)</option>
+                  <option value="450">Besi (c = 450 J/kg°C)</option>
+                  <option value="385">Tembaga (c = 385 J/kg°C)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-slate-300">Kalor Diberikan (Q):</label>
+                <input type="range" id="p2-q" min="1000" max="50000" step="1000" value="10000" oninput="runP2Calc()" class="w-full accent-orange-400">
+                <span id="p2-q-val" class="text-orange-400 font-mono font-bold">10000 Joule</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-slate-300">Massa (m): <span id="p2-m-val" class="text-cyan-400">500 g</span></label>
+                <input type="range" id="p2-m" min="100" max="1000" step="50" value="500" oninput="runP2Calc()" class="w-full accent-cyan-400">
+              </div>
+              <div>
+                <label class="block text-slate-300">Suhu Awal (T₀): <span id="p2-t0-val" class="text-emerald-400">25 °C</span></label>
+                <input type="range" id="p2-t0" min="0" max="80" value="25" oninput="runP2Calc()" class="w-full accent-emerald-400">
+              </div>
+            </div>
+
+            <!-- Realtime Output display -->
+            <div class="bg-slate-950 p-2 rounded flex justify-between items-center font-mono border border-slate-700">
+              <div>
+                <span class="text-slate-400 block text-[10px]">ΔT (KENAIKAN SUHU)</span>
+                <span id="p2-out-dt" class="text-yellow-400 font-bold text-sm">+4.78 °C</span>
+              </div>
+              <div>
+                <span class="text-slate-400 block text-[10px]">SUHU AKHIR (T)</span>
+                <span id="p2-out-ta" class="text-orange-400 font-bold text-sm">29.78 °C</span>
+              </div>
+              <button onclick="logP2ToLKPD()" class="bg-purple-600 hover:bg-purple-500 text-white px-2 py-1 rounded text-[10px] font-bold">
+                📌 Catat ke LKPD
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- PERTEMUAN 3: PERPINDAHAN KALOR                                   -->
+    <!-- ================================================================= -->
+    <section id="pertemuan3" class="meeting-section space-y-6 hidden">
+      
+      <!-- Modul Pembelajaran -->
+      <div id="p3-modul" class="bg-white p-5 rounded-xl shadow-md border border-slate-200">
+        <h2 class="text-lg font-bold text-teal-900 border-b pb-2 mb-3 flex items-center gap-2">
+          📖 Modul Ringkas: Bab 6.C - Perpindahan Kalor
+        </h2>
+        <div class="grid md:grid-cols-3 gap-4 text-xs text-slate-700">
+          <div class="bg-slate-50 p-3 rounded-lg border">
+            <h3 class="font-bold text-slate-900 mb-1">1. Konduksi</h3>
+            <p>Perpindahan kalor melalui zat perantara <strong>tanpa disertai perpindahan partikelnya</strong>. Terjadi dominan pada zat padat.</p>
+          </div>
+          <div class="bg-slate-50 p-3 rounded-lg border">
+            <h3 class="font-bold text-slate-900 mb-1">2. Konveksi</h3>
+            <p>Perpindahan kalor yang <strong>disertai perpindahan partikel zatnya</strong> akibat perbedaan massa jenis. Terjadi pada fluida (cair & gas).</p>
+          </div>
+          <div class="bg-slate-50 p-3 rounded-lg border">
+            <h3 class="font-bold text-slate-900 mb-1">3. Radiasi</h3>
+            <p>Perpindahan kalor dalam bentuk <strong>gelombang elektromagnetik</strong> yang tidak membutuhkan medium perantara.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Orientasi Masalah PBL -->
+      <div id="p3-pbl" class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl shadow-sm">
+        <span class="text-xs font-bold uppercase tracking-wider text-amber-700">Tahap 1 PBL: Orientasi Masalah</span>
+        <h3 class="text-md font-bold text-slate-900 mt-1">Aplikasi Perpindahan Kalor di Sekitar Kita</h3>
+        <p class="text-sm text-slate-700 mt-1">
+          "Mengapa gagang panci dibuat dari bahan isolator? Mengapa air yang dipanaskan di dalam bejana dapat berputar naik-turun? Dan bagaimana panas Matahari dapat merambat sampai ke Bumi melintasi ruang hampa udara?"
+        </p>
+      </div>
+
+      <!-- LKPD & WebAR Dual Panel -->
+      <div id="p3-lkpd-webar" class="dual-panel">
+        
+        <!-- PANEL KIRI: LKPD INTERAKTIF -->
+        <div class="bg-white p-5 rounded-xl shadow-md border border-slate-200 overflow-y-auto max-h-[650px]">
+          <div class="border-b pb-3 mb-4">
+            <span class="text-xs bg-teal-100 text-teal-800 font-bold px-2.5 py-1 rounded">LKPD INTERAKTIF - P3</span>
+            <h3 class="text-lg font-bold text-slate-900 mt-1">Analisis Mekanisme Perpindahan Kalor</h3>
+          </div>
+
+          <form id="form-lkpd-3" class="space-y-4 text-sm">
+            <div>
+              <h4 class="font-bold text-slate-800 mb-1">A. Tabel Analisis Fenomena</h4>
+              <div class="overflow-x-auto">
+                <table class="w-full text-xs text-left border-collapse border border-slate-300">
+                  <thead class="bg-slate-100">
+                    <tr>
+                      <th class="border p-2">Objek / Fenomena</th>
+                      <th class="border p-2">Jenis Perpindahan</th>
+                      <th class="border p-2">Penjelasan Singkat</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="border p-1.5 font-medium">Batang Logam Dipanaskan</td>
+                      <td class="border p-1">
+                        <select class="w-full border rounded p-1">
+                          <option>Konduksi</option>
+                          <option>Konveksi</option>
+                          <option>Radiasi</option>
+                        </select>
+                      </td>
+                      <td class="border p-1"><input type="text" class="w-full border rounded p-1" placeholder="Catatan bukti..."></td>
+                    </tr>
+                    <tr>
+                      <td class="border p-1.5 font-medium">Pemanasan Air Bejana</td>
+                      <td class="border p-1">
+                        <select class="w-full border rounded p-1">
+                          <option>Konveksi</option>
+                          <option>Konduksi</option>
+                          <option>Radiasi</option>
+                        </select>
+                      </td>
+                      <td class="border p-1"><input type="text" class="w-full border rounded p-1" placeholder="Catatan bukti..."></td>
+                    </tr>
+                    <tr>
+                      <td class="border p-1.5 font-medium">Radiasi Sinar Matahari</td>
+                      <td class="border p-1">
+                        <select class="w-full border rounded p-1">
+                          <option>Radiasi</option>
+                          <option>Konduksi</option>
+                          <option>Konveksi</option>
+                        </select>
+                      </td>
+                      <td class="border p-1"><input type="text" class="w-full border rounded p-1" placeholder="Catatan bukti..."></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div>
+              <h4 class="font-bold text-slate-800 mb-1">B. Pertanyaan Analisis</h4>
+              <div class="space-y-2 text-xs">
+                <div>
+                  <label class="block font-medium mb-1">1. Mengapa termoflask (termos) dapat menahan suhu panas/dingin secara efektif?</label>
+                  <textarea class="w-full p-2 border rounded" rows="2" placeholder="Jawaban siswa..."></textarea>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- PANEL KANAN: WEBAR PERPINDAHAN KALOR -->
+        <div class="bg-slate-900 rounded-xl p-4 flex flex-col justify-between text-white relative min-h-[500px]">
+          
+          <div class="flex justify-between items-center z-10 bg-slate-800/80 p-2 rounded-lg backdrop-blur">
+            <span class="text-xs font-bold text-teal-400"><i class="fa-solid fa-volcano"></i> WEBAR MODE PERPINDAHAN (3D)</span>
+            <button id="ar-toggle-3" onclick="toggleAR(3)" class="text-xs bg-teal-600 hover:bg-teal-500 text-white px-3 py-1 rounded font-semibold">
+              <i class="fa-solid fa-camera"></i> Mode AR Kamera
+            </button>
+          </div>
+
+          <!-- Mode Select Buttons -->
+          <div class="flex gap-2 z-10 my-1">
+            <button onclick="setP3Mode('konduksi')" id="btn-mode-konduksi" class="flex-1 py-1 text-xs bg-teal-600 hover:bg-teal-500 rounded font-bold">Konduksi</button>
+            <button onclick="setP3Mode('konveksi')" id="btn-mode-konveksi" class="flex-1 py-1 text-xs bg-slate-700 hover:bg-slate-600 rounded font-bold">Konveksi</button>
+            <button onclick="setP3Mode('radiasi')" id="btn-mode-radiasi" class="flex-1 py-1 text-xs bg-slate-700 hover:bg-slate-600 rounded font-bold">Radiasi</button>
+          </div>
+
+          <!-- 3D Canvas -->
+          <div id="canvas-container-3" class="w-full h-64 md:h-72 my-auto rounded-lg overflow-hidden relative">
+            <video id="webcam-3" class="absolute inset-0 w-full h-full object-cover hidden" autoplay playsinline></video>
+          </div>
+
+          <!-- Dynamic Explanation Footer -->
+          <div class="bg-slate-800/90 p-3 rounded-lg z-10 text-xs">
+            <h4 id="p3-title" class="font-bold text-teal-300">Mode Konduksi (Rambatan Logam)</h4>
+            <p id="p3-desc" class="text-slate-300 text-[11px] mt-1">
+              Panas merambat sepanjang partikel logam dari ujung bersuhu tinggi ke rendah tanpa perpindahan massa.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- SECTION EVALUASI PEMBELAJARAN                                     -->
+    <!-- ================================================================= -->
+    <section id="evaluasi" class="meeting-section bg-white p-6 rounded-xl shadow-md border border-slate-200 hidden">
+      <div class="border-b pb-3 mb-4">
+        <h2 class="text-xl font-bold text-purple-900 flex items-center gap-2">
+          📝 Evaluasi Pembelajaran: Suhu dan Kalor
+        </h2>
+        <p class="text-xs text-slate-500">Jawablah soal-soal HOTS di bawah ini untuk menguji pemahaman Anda.</p>
+      </div>
+
+      <form id="quiz-form" onsubmit="submitQuiz(event)" class="space-y-6 text-sm">
+        <!-- Soal 1 -->
+        <div class="space-y-2">
+          <p class="font-semibold text-slate-800">1. Termometer X memiliki titik beku 20°X dan titik didih 120°X. Jika termometer Celsius menunjukkan angka 40°C, maka termometer X akan menunjukkan angka...</p>
+          <div class="space-y-1 text-xs ml-2">
+            <label class="block"><input type="radio" name="q1" value="A"> A. 40°X</label>
+            <label class="block"><input type="radio" name="q1" value="B"> B. 60°X</label>
+            <label class="block"><input type="radio" name="q1" value="C"> C. 80°X</label>
+            <label class="block"><input type="radio" name="q1" value="D"> D. 100°X</label>
+          </div>
+        </div>
+
+        <!-- Soal 2 -->
+        <div class="space-y-2">
+          <p class="font-semibold text-slate-800">2. Dua buah benda A dan B memiliki massa yang sama. Benda A memiliki kalor jenis lebih besar dibanding benda B. Jika kedua benda diberi jumlah kalor yang sama besar, maka...</p>
+          <div class="space-y-1 text-xs ml-2">
+            <label class="block"><input type="radio" name="q2" value="A"> A. Kenaikan suhu A lebih besar daripada B</label>
+            <label class="block"><input type="radio" name="q2" value="B"> B. Kenaikan suhu B lebih besar daripada A</label>
+            <label class="block"><input type="radio" name="q2" value="C"> C. Kenaikan suhu kedua benda sama besar</label>
+            <label class="block"><input type="radio" name="q2" value="D"> D. Suhu akhir A pasti lebih tinggi dari B</label>
+          </div>
+        </div>
+
+        <button type="submit" class="bg-purple-700 hover:bg-purple-800 text-white font-bold px-6 py-2 rounded-lg transition">
+          Kirim & Lihat Nilai
+        </button>
+      </form>
+
+      <div id="quiz-result" class="mt-4 p-4 rounded-lg bg-slate-100 hidden"></div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- SECTION REFLEKSI PESERTA DIDIK                                    -->
+    <!-- ================================================================= -->
+    <section id="refleksi" class="meeting-section bg-white p-6 rounded-xl shadow-md border border-slate-200 hidden">
+      <div class="border-b pb-3 mb-4">
+        <h2 class="text-xl font-bold text-teal-900 flex items-center gap-2">
+          💭 Refleksi Peserta Didik
+        </h2>
+        <p class="text-xs text-slate-500">Ungkapkan pengalaman dan pemahaman belajar Anda selama mengikuti pembelajaran WebAR ini.</p>
+      </div>
+
+      <div class="space-y-4 text-sm">
+        <div>
+          <label class="block font-medium text-slate-800 mb-1">Bagaimana tingkat pemahaman Anda terhadap konsep Suhu dan Kalor?</label>
+          <div class="flex gap-4 text-2xl">
+            <button onclick="setEmoji(1)" class="hover:scale-125 transition">😕</button>
+            <button onclick="setEmoji(2)" class="hover:scale-125 transition">😐</button>
+            <button onclick="setEmoji(3)" class="hover:scale-125 transition">🙂</button>
+            <button onclick="setEmoji(4)" class="hover:scale-125 transition">😄</button>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-medium text-slate-800 mb-1">Bagian mana dari media WebAR yang paling membantu pembelajaran Anda?</label>
+          <textarea class="w-full p-2 border rounded text-xs" rows="3" placeholder="Tuliskan refleksi Anda..."></textarea>
+        </div>
+
+        <button onclick="alert('Refleksi berhasil disimpan. Terima kasih!')" class="bg-teal-600 hover:bg-teal-700 text-white font-bold px-6 py-2 rounded-lg transition">
+          Simpan Refleksi
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-slate-800 text-slate-400 text-xs py-4 mt-8">
+    <div class="max-w-7xl mx-auto px-4 text-center">
+      <p>© 2026 WebAR Suhu dan Kalor - SMA Muhammadiyah 4. Designed for Interactive Physics Learning.</p>
+    </div>
+  </footer>
+
+  <!-- ================================================================= -->
+  <!-- JAVASCRIPT LOGIC & THREE.JS WEBAR SIMULATION                      -->
+  <!-- ================================================================= -->
+  <script>
+    // --- SECTION NAVIGATION LOGIC ---
+    function hideAllSections() {
+      document.querySelectorAll('.meeting-section').forEach(el => el.classList.add('hidden'));
+    }
+
+    function showMeeting(num) {
+      hideAllSections();
+      document.getElementById(`pertemuan${num}`).classList.remove('hidden');
+    }
+
+    function showSection(secId) {
+      hideAllSections();
+      document.getElementById(secId).classList.remove('hidden');
+    }
+
+    function scrollToTab(tabId) {
+      const activeMeeting = document.querySelector('.meeting-section:not(.hidden)');
+      if (activeMeeting) {
+        const el = activeMeeting.querySelector(`[id$="${tabId}"]`);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // --- THREE.JS WEBAR SIMULATION SETUP ---
+    let scene1, camera1, renderer1, thermFluid;
+    let scene2, camera2, renderer2, waterCube, flameMesh;
+    let scene3, camera3, renderer3, p3Rod, p3Particles = [];
+    let p3CurrentMode = 'konduksi';
+
+    function init3D() {
+      // Setup Canvas P1
+      const c1 = document.getElementById('canvas-container-1');
+      scene1 = new THREE.Scene();
+      camera1 = new THREE.PerspectiveCamera(45, c1.clientWidth / c1.clientHeight, 0.1, 1000);
+      camera1.position.set(0, 0, 5);
+      renderer1 = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      renderer1.setSize(c1.clientWidth, c1.clientHeight);
+      c1.appendChild(renderer1.domElement);
+
+      // Build Thermometer Object 3D
+      const glassGeo = new THREE.CylinderGeometry(0.2, 0.2, 3, 16);
+      const glassMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.3 });
+      const glass = new THREE.Mesh(glassGeo, glassMat);
+      scene1.add(glass);
+
+      const fluidGeo = new THREE.CylinderGeometry(0.12, 0.12, 2.8, 16);
+      const fluidMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+      thermFluid = new THREE.Mesh(fluidGeo, fluidMat);
+      thermFluid.position.y = -0.5;
+      scene1.add(thermFluid);
+
+      // Setup Canvas P2
+      const c2 = document.getElementById('canvas-container-2');
+      scene2 = new THREE.Scene();
+      camera2 = new THREE.PerspectiveCamera(45, c2.clientWidth / c2.clientHeight, 0.1, 1000);
+      camera2.position.set(0, 1, 4);
+      camera2.lookAt(0, 0, 0);
+      renderer2 = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      renderer2.setSize(c2.clientWidth, c2.clientHeight);
+      c2.appendChild(renderer2.domElement);
+
+      const cubeGeo = new THREE.BoxGeometry(1.2, 1.2, 1.2);
+      const cubeMat = new THREE.MeshBasicMaterial({ color: 0x3b82f6, transparent: true, opacity: 0.7 });
+      waterCube = new THREE.Mesh(cubeGeo, cubeMat);
+      scene2.add(waterCube);
+
+      const flameGeo = new THREE.ConeGeometry(0.3, 0.6, 8);
+      const flameMat = new THREE.MeshBasicMaterial({ color: 0xff5500 });
+      flameMesh = new THREE.Mesh(flameGeo, flameMat);
+      flameMesh.position.y = -1;
+      scene2.add(flameMesh);
+
+      // Setup Canvas P3
+      const c3 = document.getElementById('canvas-container-3');
+      scene3 = new THREE.Scene();
+      camera3 = new THREE.PerspectiveCamera(45, c3.clientWidth / c3.clientHeight, 0.1, 1000);
+      camera3.position.set(0, 0, 5);
+      renderer3 = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      renderer3.setSize(c3.clientWidth, c3.clientHeight);
+      c3.appendChild(renderer3.domElement);
+
+      const rodGeo = new THREE.CylinderGeometry(0.1, 0.1, 3, 16);
+      rodGeo.rotateZ(Math.PI / 2);
+      const rodMat = new THREE.MeshBasicMaterial({ color: 0x94a3b8 });
+      p3Rod = new THREE.Mesh(rodGeo, rodMat);
+      scene3.add(p3Rod);
+
+      animate();
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      if (scene1) {
+        thermFluid.rotation.y += 0.01;
+        renderer1.render(scene1, camera1);
+      }
+      if (scene2) {
+        waterCube.rotation.y += 0.005;
+        flameMesh.scale.y = 1 + Math.sin(Date.now() * 0.01) * 0.2;
+        renderer2.render(scene2, camera2);
+      }
+      if (scene3) {
+        if (p3CurrentMode === 'konveksi') {
+          p3Rod.rotation.z += 0.02;
+        }
+        renderer3.render(scene3, camera3);
+      }
+    }
+
+    // --- PHYSICS CALCULATIONS & INTERACTIVES ---
+
+    // P1: Temperature Conversion
+    function updateP1Slider(val) {
+      const c = parseFloat(val);
+      const f = (c * 9/5) + 32;
+      const k = c + 273.15;
+      const r = c * 4/5;
+
+      document.getElementById('p1-temp-val').innerText = `${c} °C`;
+      document.getElementById('disp-c').innerText = `${c.toFixed(1)} °C`;
+      document.getElementById('disp-f').innerText = `${f.toFixed(1)} °F`;
+      document.getElementById('disp-k').innerText = `${k.toFixed(1)} K`;
+      document.getElementById('disp-r').innerText = `${r.toFixed(1)} °R`;
+
+      if (thermFluid) {
+        const scaleY = Math.max(0.1, Math.min(1.2, (c + 20) / 130));
+        thermFluid.scale.set(1, scaleY, 1);
+      }
+    }
+
+    function updateP1Sample() {
+      const val = document.getElementById('p1-sample').value;
+      document.getElementById('p1-slider').value = val;
+      updateP1Slider(val);
+    }
+
+    function updateP1Display() {
+      updateP1Slider(document.getElementById('p1-slider').value);
+    }
+
+    // P2: Heat Q = m.c.dT Calculations
+    function runP2Calc() {
+      const c = parseFloat(document.getElementById('p2-mat').value);
+      const q = parseFloat(document.getElementById('p2-q').value);
+      const mGrams = parseFloat(document.getElementById('p2-m').value);
+      const t0 = parseFloat(document.getElementById('p2-t0').value);
+
+      const mKg = mGrams / 1000;
+      const dT = q / (mKg * c);
+      const tAkhir = t0 + dT;
+
+      document.getElementById('p2-q-val').innerText = `${q} Joule`;
+      document.getElementById('p2-m-val').innerText = `${mGrams} g`;
+      document.getElementById('p2-t0-val').innerText = `${t0} °C`;
+
+      document.getElementById('p2-out-dt').innerText = `+${dT.toFixed(2)} °C`;
+      document.getElementById('p2-out-ta').innerText = `${tAkhir.toFixed(2)} °C`;
+    }
+
+    function logP2ToLKPD() {
+      const matSelect = document.getElementById('p2-mat');
+      const matName = matSelect.options[matSelect.selectedIndex].text.split(' ')[0];
+      const m = document.getElementById('p2-m').value;
+      const q = document.getElementById('p2-q').value;
+      const t0 = document.getElementById('p2-t0').value;
+      const ta = document.getElementById('p2-out-ta').innerText.replace(' °C', '');
+      const dt = document.getElementById('p2-out-dt').innerText.replace(' °C', '');
+
+      const tbody = document.getElementById('p2-table-body');
+      tbody.innerHTML = `
+        <tr>
+          <td class="border p-1">${matName}</td>
+          <td class="border p-1">${m}</td>
+          <td class="border p-1">${q}</td>
+          <td class="border p-1">${t0}</td>
+          <td class="border p-1">${ta}</td>
+          <td class="border p-1 font-bold text-blue-600">${dt}</td>
+        </tr>
+      `;
+      alert('Data hasil simulasi berhasil dicatat ke LKPD!');
+    }
+
+    // P3: Heat Transfer Modes
+    function setP3Mode(mode) {
+      p3CurrentMode = mode;
+      const title = document.getElementById('p3-title');
+      const desc = document.getElementById('p3-desc');
+
+      document.querySelectorAll('#pertemuan3 button[id^="btn-mode-"]').forEach(btn => {
+        btn.className = "flex-1 py-1 text-xs bg-slate-700 hover:bg-slate-600 rounded font-bold";
+      });
+      document.getElementById(`btn-mode-${mode}`).className = "flex-1 py-1 text-xs bg-teal-600 hover:bg-teal-500 rounded font-bold";
+
+      if (mode === 'konduksi') {
+        title.innerText = "Mode Konduksi (Rambatan Logam)";
+        desc.innerText = "Panas merambat sepanjang partikel logam dari ujung bersuhu tinggi ke rendah tanpa perpindahan massa.";
+        p3Rod.scale.set(1, 1, 1);
+      } else if (mode === 'konveksi') {
+        title.innerText = "Mode Konveksi (Arus Fluida)";
+        desc.innerText = "Fluida panas memuai, massa jenis mengecil dan bergerak naik, digantikan fluida dingin di atasnya.";
+        p3Rod.scale.set(1.5, 0.5, 1.5);
+      } else if (mode === 'radiasi') {
+        title.innerText = "Mode Radiasi (Pancaran Gelombang)";
+        desc.innerText = "Kalor berpindah dalam bentuk energi gelombang elektromagnetik tanpa memerlukan medium perantara.";
+        p3Rod.scale.set(0.8, 0.8, 0.8);
+      }
+    }
+
+    // --- AR CAMERA OVERLAY SIMULATION ---
+    function toggleAR(num) {
+      const video = document.getElementById(`webcam-${num}`);
+      const btn = document.getElementById(`ar-toggle-${num}`);
+
+      if (video.classList.contains('hidden')) {
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+          .then(stream => {
+            video.srcObject = stream;
+            video.classList.remove('hidden');
+            btn.innerHTML = `<i class="fa-solid fa-stop"></i> Matikan AR`;
+          })
+          .catch(err => {
+            alert('Akses kamera tidak diizinkan atau tidak tersedia.');
+          });
+      } else {
+        const stream = video.srcObject;
+        if (stream) {
+          stream.getTracks().forEach(track => track.stop());
+        }
+        video.classList.add('hidden');
+        btn.innerHTML = `<i class="fa-solid fa-camera"></i> Mode AR Kamera`;
+      }
+    }
+
+    // --- QUIZ EVALUATION ---
+    function submitQuiz(e) {
+      e.preventDefault();
+      let score = 0;
+      const q1 = document.querySelector('input[name="q1"]:checked')?.value;
+      const q2 = document.querySelector('input[name="q2"]:checked')?.value;
+
+      if (q1 === 'B') score += 50; // (40/100)*(120-20) + 20 = 60°X
+      if (q2 === 'B') score += 50; // Q = m.c.dT -> dT berbanding terbalik dengan c
+
+      const res = document.getElementById('quiz-result');
+      res.classList.remove('hidden');
+      res.innerHTML = `
+        <h3 class="font-bold text-slate-900">Hasil Evaluasi: ${score} / 100</h3>
+        <p class="text-xs text-slate-600 mt-1">${score >= 70 ? 'Selamat! Anda memahami materi Suhu dan Kalor dengan sangat baik.' : 'Silakan pelajari kembali simulasi WebAR dan modul materi.'}</p>
+      `;
+    }
+
+    function setEmoji(num) {
+      alert(`Terima kasih telah memberikan penilaian refleksi (${num}/4)!`);
+    }
+
+    // --- INITIALIZATION ---
+    window.onload = function() {
+      init3D();
+      runP2Calc();
+    };
+  </script>
+</body>
+</html>
